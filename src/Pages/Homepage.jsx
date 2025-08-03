@@ -1,18 +1,20 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-// Register ScrollTrigger plugin
+import logo from '../assets/logos/logoblack.png'; // Adjust the path as necessary
+// Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Homepage() {
+  // Refs for animation targets
   const heroRef = useRef(null);
   const featuresRef = useRef(null);
   const ctaRef = useRef(null);
   const logoRef = useRef(null);
   const taskCardsRef = useRef([]);
+  const appPreviewRef = useRef(null);
 
-  // Add to ref array
+  // Add elements to ref array
   const addToRefs = (el) => {
     if (el && !taskCardsRef.current.includes(el)) {
       taskCardsRef.current.push(el);
@@ -20,72 +22,96 @@ export default function Homepage() {
   };
 
   useEffect(() => {
-    // Hero animation
-    gsap.from(heroRef.current, {
+    // Initial hide of animated elements
+    gsap.set([heroRef.current, ".feature-item", ...taskCardsRef.current, ctaRef.current, appPreviewRef.current], {
       opacity: 0,
-      y: 50,
+      y: 20
+    });
+
+    // Hero section animation
+    gsap.to(heroRef.current, {
+      opacity: 1,
+      y: 0,
       duration: 1,
       ease: "power3.out"
     });
 
-    // Logo animation
+    // Logo spin animation
     gsap.from(logoRef.current, {
       rotation: 360,
       duration: 1.5,
       ease: "elastic.out(1, 0.5)"
     });
 
+    // App preview animation
+    gsap.to(appPreviewRef.current, {
+      scrollTrigger: {
+        trigger: appPreviewRef.current,
+        start: "top 75%",
+        toggleActions: "play none none none"
+      },
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: "power2.out"
+    });
+
     // Features animation
-    gsap.from(".feature-item", {
+    gsap.to(".feature-item", {
       scrollTrigger: {
         trigger: featuresRef.current,
         start: "top 80%",
         toggleActions: "play none none none"
       },
-      opacity: 0,
-      y: 50,
+      opacity: 1,
+      y: 0,
       stagger: 0.2,
       duration: 0.8,
       ease: "back.out(1.7)"
     });
 
-    // Task card animations
+    // Task cards animation
     taskCardsRef.current.forEach((card, i) => {
-      gsap.from(card, {
+      gsap.to(card, {
         scrollTrigger: {
           trigger: card,
           start: "top 75%",
           toggleActions: "play none none none"
         },
-        opacity: 0,
-        x: i % 2 === 0 ? -50 : 50,
+        opacity: 1,
+        x: 0,
         duration: 0.8,
         ease: "power2.out"
       });
     });
 
-    // CTA animation
-    gsap.from(ctaRef.current, {
+    // CTA section animation
+    gsap.to(ctaRef.current, {
       scrollTrigger: {
         trigger: ctaRef.current,
         start: "top 80%",
         toggleActions: "play none none none"
       },
-      opacity: 0,
-      scale: 0.8,
+      opacity: 1,
+      scale: 1,
       duration: 1,
       ease: "elastic.out(1, 0.5)"
     });
 
+    // Refresh ScrollTrigger on resize
+    const handleResize = () => ScrollTrigger.refresh();
+    window.addEventListener('resize', handleResize);
+
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 overflow-x-hidden">
       {/* Navigation */}
-      <nav className="container mx-auto px-6 py-4">
+      <nav className="container mx-auto px-6 py-4 sticky top-0 z-50 bg-white bg-opacity-80 backdrop-blur-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <div ref={logoRef} className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
@@ -123,7 +149,7 @@ export default function Homepage() {
       </section>
 
       {/* App Preview */}
-      <section className="container mx-auto px-6 py-12 md:py-20">
+      <section ref={appPreviewRef} className="container mx-auto px-6 py-12 md:py-20">
         <div className="relative max-w-4xl mx-auto">
           <div className="absolute -inset-4 bg-indigo-100 rounded-3xl opacity-50 blur-lg"></div>
           <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden">
