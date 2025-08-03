@@ -6,6 +6,7 @@ import Dashboard from "./Pages/Dashboard.jsx";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./Services/firebase.js";
+import Homepage from "./Pages/Homepage.jsx";
 
 export default function App() {
   const [user, setUser] = useState(null); 
@@ -31,6 +32,7 @@ export default function App() {
           path="/dashboard"
           element={user ? <Dashboard /> : <Navigate to="/login" />}
         />
+        <Route path="/" element={<Homepage />} />
         <Route path="*" element={<Navigate to={user ? "/dashboard" : "/login"} />} />
       </Routes>
     </Router>
