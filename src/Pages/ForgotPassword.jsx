@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { FiMail, FiArrowLeft, FiCheckCircle } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout';
-import { useAuth } from '../contexts/AuthContext'; // Assuming you have an auth context
+import { useAuth } from '../context/AuthContext'; // Assuming you have an auth context
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');

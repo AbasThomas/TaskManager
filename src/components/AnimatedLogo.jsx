@@ -1,23 +1,39 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { gsap } from 'gsap';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion.js'; // Custom hook
 
 const AnimatedLogo = ({ darkMode }) => {
+  // Refs
   const logoContainer = useRef(null);
   const zPath = useRef(null);
   const dots = useRef([]);
   const glow = useRef(null);
   const ring = useRef(null);
+  const animationRef = useRef(null);
+  const hoverAnimationRef = useRef(null);
 
-  useEffect(() => {
-    // Dot positions (x, y, delay multiplier)
-    const dotConfig = [
-      { x: 8, y: 6, delay: 0 },
-      { x: 10, y: 8, delay: 0.2 },
-      { x: 12, y: 10, delay: 0.4 }
-    ];
+  // Accessibility hook
+  const prefersReducedMotion = usePrefersReducedMotion();
+
+  // Dot configuration
+  const dotConfig = [
+    { x: 8, y: 6, delay: 0, color: darkMode ? 'bg-indigo-400' : 'bg-indigo-600' },
+    { x: 10, y: 8, delay: 0.2, color: darkMode ? 'bg-purple-400' : 'bg-purple-600' },
+    { x: 12, y: 10, delay: 0.4, color: darkMode ? 'bg-pink-400' : 'bg-pink-600' }
+  ];
+
+  // Initialize animations
+  const initAnimations = useCallback(() => {
+    // Clear any existing animations
+    if (animationRef.current) animationRef.current.kill();
+    if (hoverAnimationRef.current) hoverAnimationRef.current.kill();
 
     // Main animation timeline
-    const masterTl = gsap.timeline({ repeat: -1, repeatDelay: 0.5 });
+    const masterTl = gsap.timeline({ 
+      repeat: -1, 
+      repeatDelay: 0.5,
+      paused: prefersReducedMotion 
+    });
 
     // Dot wave animation (3 cycles)
     for (let cycle = 0; cycle < 3; cycle++) {
@@ -73,6 +89,8 @@ const AnimatedLogo = ({ darkMode }) => {
       ease: "sine.inOut"
     }, ">0.2");
 
+    animationRef.current = masterTl;
+
     // Hover animations
     const hoverTl = gsap.timeline({ paused: true });
     hoverTl.to(logoContainer.current, {
@@ -101,20 +119,47 @@ const AnimatedLogo = ({ darkMode }) => {
       duration: 0.3
     }, 0);
 
-    logoContainer.current.addEventListener('mouseenter', () => hoverTl.play());
-    logoContainer.current.addEventListener('mouseleave', () => hoverTl.reverse());
+    hoverAnimationRef.current = hoverTl;
+
+    // Event listeners
+    const container = logoContainer.current;
+    const handleMouseEnter = () => hoverTl.play();
+    const handleMouseLeave = () => hoverTl.reverse();
+
+    container.addEventListener('mouseenter', handleMouseEnter);
+    container.addEventListener('mouseleave', handleMouseLeave);
+    container.addEventListener('focus', handleMouseEnter);
+    container.addEventListener('blur', handleMouseLeave);
 
     return () => {
-      masterTl.kill();
-      hoverTl.kill();
+      container.removeEventListener('mouseenter', handleMouseEnter);
+      container.removeEventListener('mouseleave', handleMouseLeave);
+      container.removeEventListener('focus', handleMouseEnter);
+      container.removeEventListener('blur', handleMouseLeave);
     };
-  }, []);
+  }, [darkMode, prefersReducedMotion]);
+
+  useEffect(() => {
+    const cleanup = initAnimations();
+    
+    // Play animation if motion is not reduced
+    if (!prefersReducedMotion && animationRef.current) {
+      animationRef.current.play();
+    }
+
+    return () => {
+      cleanup && cleanup();
+      if (animationRef.current) animationRef.current.kill();
+      if (hoverAnimationRef.current) hoverAnimationRef.current.kill();
+    };
+  }, [initAnimations, prefersReducedMotion]);
 
   return (
     <div 
       ref={logoContainer}
-      className="relative w-16 h-16 flex items-center justify-center cursor-pointer"
+      className="relative w-16 h-16 flex items-center justify-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
       aria-label="Zentra Logo"
+      tabIndex="0" // Make it focusable for keyboard users
     >
       {/* Animated glow */}
       <div 
@@ -122,6 +167,7 @@ const AnimatedLogo = ({ darkMode }) => {
         className={`absolute inset-0 rounded-full ${
           darkMode ? 'bg-indigo-500/20' : 'bg-indigo-300/30'
         } blur-md transition-colors duration-300`}
+        aria-hidden="true"
       />
       
       {/* Animated ring */}
@@ -131,6 +177,7 @@ const AnimatedLogo = ({ darkMode }) => {
         height="64" 
         viewBox="0 0 64 64" 
         className="absolute inset-0 w-full h-full"
+        aria-hidden="true"
       >
         <circle 
           cx="32" 
@@ -153,6 +200,7 @@ const AnimatedLogo = ({ darkMode }) => {
         viewBox="0 0 44 44" 
         fill="none" 
         className="absolute z-10 transition-colors duration-300"
+        aria-hidden="true"
       >
         <path 
           d="M12 12 L32 12 L12 32 L32 32" 
@@ -164,23 +212,21 @@ const AnimatedLogo = ({ darkMode }) => {
       </svg>
       
       {/* Perfectly aligned dots */}
-      {[...Array(3)].map((_, i) => (
+      {dotConfig.map((dot, i) => (
         <div 
           key={i}
           ref={el => dots.current[i] = el}
-          className={`absolute w-3 h-3 rounded-full z-20 ${
-            darkMode 
-              ? ['bg-indigo-400', 'bg-purple-400', 'bg-pink-400'][i] 
-              : ['bg-indigo-600', 'bg-purple-600', 'bg-pink-600'][i]
-          } shadow-sm transition-colors duration-300`}
+          className={`absolute w-3 h-3 rounded-full z-20 ${dot.color} shadow-sm transition-colors duration-300`}
           style={{
-            left: `${6 + i * 3}px`,
-            top: `${6 + i * 3}px`,
+            left: `${dot.x}px`,
+            top: `${dot.y}px`,
             transform: 'translate(0, 0)'
           }}
+          aria-hidden="true"
         />
       ))}
     </div>
   );
 };
-export default AnimatedLogo;  
+
+export default AnimatedLogo;

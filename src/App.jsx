@@ -5,6 +5,7 @@ import Dashboard from "./Pages/Dashboard.jsx";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./Services/firebase.js";
+import ForgotPassword from "./Pages/ForgotPassword.jsx";
 import Homepage from "./Pages/Homepage.jsx";
 import Signup from "./Pages/Signup.jsx";
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
         {/* <Route path="/login" element={!user ? <Login /> : <Navigate to="/dashboard" />} /> */}
         <Route path="/signup" element={ <Signup/> } />
         <Route path="/login" element={ <Login/> } />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         {/* <Route
           path="/dashboard"
           element={user ? <Dashboard /> : <Navigate to="/login" />}
