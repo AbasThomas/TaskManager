@@ -60,7 +60,7 @@ import { useAuth } from '../context/AuthContext'; // Assuming you have an auth c
     setIsSubmitting(true);
     try {
       await signup(formData.email, formData.password, formData.fullName);
-      navigate('/dashboard'); // Redirect after successful signup
+      navigate('/login'); // Redirect after successful signup
     } catch (error) {
       setErrors({ 
         general: error.message || 'Signup failed. Please try again.' 
