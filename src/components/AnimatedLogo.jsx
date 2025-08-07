@@ -209,22 +209,7 @@ const AnimatedLogo = ({ darkMode }) => {
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-      </svg>
-      
-      {/* Perfectly aligned dots */}
-      {dotConfig.map((dot, i) => (
-        <div 
-          key={i}
-          ref={el => dots.current[i] = el}
-          className={`absolute w-3 h-3 rounded-full z-20 ${dot.color} shadow-sm transition-colors duration-300`}
-          style={{
-            left: `${dot.x}px`,
-            top: `${dot.y}px`,
-            transform: 'translate(0, 0)'
-          }}
-          aria-hidden="true"
-        />
-      ))}
+      </svg>     
     </div>
   );
 };

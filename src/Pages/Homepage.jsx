@@ -4,6 +4,7 @@
   import { FiSun, FiMoon, FiCheck, FiClock, FiBarChart2, FiLayers, FiZap, FiAward, FiSmartphone, FiUsers, FiServer } from 'react-icons/fi';
   import { FaFigma, FaSlack, FaTrello } from 'react-icons/fa';
   import AnimatedLogo from '../components/AnimatedLogo.jsx';
+import { Navigate } from 'react-router-dom';
   // Register GSAP plugins
   gsap.registerPlugin(ScrollTrigger);
 
@@ -207,7 +208,7 @@
               >
                 {darkMode ? <FiSun className="w-5 h-5" /> : <FiMoon className="w-5 h-5" />}
               </button>
-              <button className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition shadow-md hover:shadow-lg    cursor-pointer">
+              <button onClick={Navigate('/signup')} className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition shadow-md hover:shadow-lg    cursor-pointer">
                 Get Started
               </button>
             </div>
