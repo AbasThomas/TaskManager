@@ -4,7 +4,7 @@
   import { FiSun, FiMoon, FiCheck, FiClock, FiBarChart2, FiLayers, FiZap, FiAward, FiSmartphone, FiUsers, FiServer } from 'react-icons/fi';
   import { FaFigma, FaSlack, FaTrello } from 'react-icons/fa';
   import AnimatedLogo from '../components/AnimatedLogo.jsx';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
   // Register GSAP plugins
   gsap.registerPlugin(ScrollTrigger);
 
@@ -55,7 +55,12 @@ import { Navigate } from 'react-router-dom';
     { icon: <FiServer className="w-8 h-8" />, name: "API" }
   ];
 
+    const goToSignup = () => {
+    navigate('/signup');
+  };
+
   export default function Homepage() {
+    const navigate = useNavigate();
     const [darkMode, setDarkMode] = useState(false);
     const heroRef = useRef(null);
     const featuresRef = useRef(null);
@@ -208,7 +213,7 @@ import { Navigate } from 'react-router-dom';
               >
                 {darkMode ? <FiSun className="w-5 h-5" /> : <FiMoon className="w-5 h-5" />}
               </button>
-              <button onClick={Navigate('/signup')} className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition shadow-md hover:shadow-lg    cursor-pointer">
+              <button onClick={goToSignup} className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition shadow-md hover:shadow-lg    cursor-pointer">
                 Get Started
               </button>
             </div>
@@ -230,7 +235,7 @@ import { Navigate } from 'react-router-dom';
                 Zentra helps you manage tasks effortlessly with powerful features designed for modern teams.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:opacity-90 transition shadow-lg hover:shadow-xl text-lg font-medium flex items-center gap-2">
+                <button onClick={goToSignup} className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:opacity-90 transition shadow-lg hover:shadow-xl text-lg font-medium flex items-center gap-2">
                   <FiZap className="w-5 h-5" />
                   Get Started - Free
                 </button>
@@ -353,7 +358,7 @@ import { Navigate } from 'react-router-dom';
               <p className="text-xl text-indigo-100 mb-8 max-w-2xl mx-auto">
                 Join thousands of professionals who are already achieving more with Zentra.
               </p>
-              <button className="px-8 py-4 bg-white text-indigo-600 rounded-xl hover:bg-gray-100 transition shadow-lg hover:shadow-xl text-lg font-bold flex items-center justify-center gap-2 mx-auto">
+              <button onClick={goToSignup} className="px-8 py-4 bg-white text-indigo-600 rounded-xl hover:bg-gray-100 transition shadow-lg hover:shadow-xl text-lg font-bold flex items-center justify-center gap-2 mx-auto">
                 <FiZap className="w-5 h-5" />
                 Get Started - It's Free
               </button>
