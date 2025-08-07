@@ -55,9 +55,7 @@ import { useNavigate } from 'react-router-dom';
     { icon: <FiServer className="w-8 h-8" />, name: "API" }
   ];
 
-    const goToSignup = () => {
-    navigate('/signup');
-  };
+
 
   export default function Homepage() {
     const navigate = useNavigate();
@@ -74,7 +72,9 @@ import { useNavigate } from 'react-router-dom';
       setDarkMode(newMode);
       localStorage.setItem('darkMode', JSON.stringify(newMode));
     };
-
+        const goToSignup = () => {
+    navigate('/signup');
+  };
     // Check for saved theme preference
     useEffect(() => {
       const savedMode = JSON.parse(localStorage.getItem('darkMode'));
