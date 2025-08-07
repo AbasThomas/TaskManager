@@ -30,10 +30,10 @@ export default function App() {
         <Route path="/signup" element={ <Signup/> } />
         <Route path="/login" element={ <Login/> } />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        {/* <Route
+        <Route
           path="/dashboard"
-          element={user ? <Dashboard /> : <Navigate to="/login" />}
-        /> */}
+          element={ <Dashboard />}
+        />
         <Route path="/" element={<Homepage />} />
         {/* <Route path="*" element={<Navigate to={user ? "/dashboard" : "/login"} />} /> */}
       </Routes>
