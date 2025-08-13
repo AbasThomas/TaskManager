@@ -13,7 +13,7 @@ export default {
         surface: '#1c1f26',
         primary: '#6c63ff',
         secondary: '#4fc3f7',
-        text: '#f5f7fa',
+        // text: '#f5f7fa',
         muted: '#cbd5e1',
         border: '#2a2e36',
         danger: '#ff6b6b',

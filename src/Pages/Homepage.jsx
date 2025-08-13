@@ -62,10 +62,10 @@ import { useNavigate } from 'react-router-dom';
     const [darkMode, setDarkMode] = useState(false);
     const heroRef = useRef(null);
     const featuresRef = useRef(null);
-    const appRef = useRef(null);
+    const appRef = useRef(null);  
     const stepsRef = useRef(null);
     const ctaRef = useRef(null);
-
+    
     // Toggle dark mode and persist in localStorage
     const toggleDarkMode = () => {
       const newMode = !darkMode;
